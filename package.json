@@ -13,7 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/server": "^4.9.5"
+    "@apollo/server": "^4.9.5",
+    "couchbase": "^4.2.8",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
