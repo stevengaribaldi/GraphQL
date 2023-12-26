@@ -21,18 +21,22 @@ input ProductInput{
 
 type Query {
   getProduct(id: String): Product
+  getAllProductsWithTerm(term: String): [ Product ]
 }
 
 type Mutation {
   createProduct(product: ProductInput): Product
   deleteProduct(id: String): Boolean
   updateProduct(id: String, product: ProductInput): Product
+  setQuntity(id: String, quantity:Int): Boolean
 }
   `;
 //mutation->
 //X createProduct
 //X deleteProduct
-//_updateProduct
+//X updateProduct
+// _getAllProductsWithTerm
+//_setQuntity->
 const resolvers = {
     Query: {
         async getProduct(_, args, contextValue) {
@@ -46,6 +50,29 @@ const resolvers = {
                 throw error;
             });
             return getResult.content;
+        },
+        async getAllProductsWithTerm(_, args, contextValue) {
+            //search index search for product
+            //searches happen at the cluster level
+            const { term } = args;
+            const result = await contextValue.couchbaseCluster.searchQuery("index-products", couchbase.SearchQuery.match(term), {
+                limit: 2,
+            });
+            const bucket = contextValue.couchbaseCluster.bucket("store-bucket");
+            const collection = bucket
+                .scope("product-scopr")
+                .collection("products");
+            var productsArray = [];
+            for (var i = 0; i < result.rows.length; i++) {
+                const id = result.rows[i].id;
+                const getResult = await collection.get(id).catch((error) => {
+                    console.log(error);
+                    throw error;
+                });
+                getResult.content;
+                productsArray.push(getResult.content);
+            }
+            return productsArray;
         },
     },
     Mutation: {
@@ -91,6 +118,20 @@ const resolvers = {
                 throw error;
             });
             return product;
+        },
+        async setQuntity(_, args, contextValue) {
+            const { id, quantity } = args;
+            const bucket = contextValue.couchbaseCluster.bucket("store-bucket");
+            const collection = bucket
+                .scope("product-scopr")
+                .collection("products");
+            const updatedMutationResult = await collection
+                .mutateIn(id, [couchbase.MutateInSpec.replace("quantity", quantity)])
+                .catch((error) => {
+                console.log(error);
+                throw error;
+            });
+            return true;
         },
     },
 };
