@@ -31,6 +31,13 @@ const RootQuery = new GraphQLObjectType({
     client: {
       type: ClientType,
       args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return clients.find((client) => client.id === args.id);
+      },
     },
   },
+});
+
+module.exports = new GraphQLSchema({
+    query: RootQuery,
 });
