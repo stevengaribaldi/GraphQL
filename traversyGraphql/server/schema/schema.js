@@ -81,3 +81,5 @@ const RootQuery = new GraphQLObjectType({
 module.exports = new GraphQLSchema({
   query: RootQuery,
 });
+
+// mongodb+srv://jjechita123:<ccSAIuo2UMhDhoPd>@atlascluster.bs16bao.mongodb.net/?retryWrites=true&w=majority
