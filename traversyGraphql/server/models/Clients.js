@@ -19,4 +19,4 @@ const ClientSchema = new mongoose.Schema({
     maxlength: [20, "Phone number cannot be longer than 20 characters"],
   },
 });
-modulus.export = mongoose.model("Client", ClientSchema);
+module.exports = mongoose.model("Client", ClientSchema);

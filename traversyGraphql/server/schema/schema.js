@@ -1,7 +1,7 @@
-const { projects, clients } = require("../sampleData");
+// const { projects, clients } = require("../sampleData");
 //Mongoose models
-const Project = require("../models/Project");
-const Client = require("../models/Client");
+const Project = require("../models/Project.js");
+const Client = require("../models/Clients.js");
 
 const {
   GraphQLObjectType,

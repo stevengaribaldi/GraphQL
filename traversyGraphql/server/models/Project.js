@@ -22,4 +22,4 @@ const ProjectSchema = new mongoose.Schema({
     ref: "Client",
   },
 });
-modulus.export = mongoose.model("Project", ProjectSchema);
+module.exports = mongoose.model("Project", ProjectSchema);
