@@ -1,4 +1,3 @@
-// const { projects, clients } = require("../sampleData");
 //Mongoose models
 const Project = require("../models/Project.js");
 const Client = require("../models/Clients.js");
@@ -82,8 +81,52 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
+//mutations
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    //adding a client
+    addClient: {
+      type: ClientType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLString },
+        phone: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        let client = new Client({
+          name: args.name,
+          email: args.email,
+          phone: args.phone,
+        });
+        return client.save();
+      },
+    },
+    //adding a project
+    addProject: {
+      type: ProjectType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: GraphQLString },
+        status: { type: GraphQLString },
+        clientId: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        let project = new Project({
+          name: args.name,
+          description: args.description,
+          status: args.status,
+          clientId: args.clientId,
+        });
+        return project.save();
+      },
+    },
+  },
+});
+
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutation,
 });
 
 // mongodb+srv://jjechita123:<ccSAIuo2UMhDhoPd>@atlascluster.bs16bao.mongodb.net/?retryWrites=true&w=majority
